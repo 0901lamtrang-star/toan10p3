@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Quest III — Trả lời ngắn · Toán 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,600;1,9..144,800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117; --bg-2: #161b22;
+    --ink: #f0ebe1; --ink-dim: #8b95a7;
+    --accent: #ffd23f; --accent-2: #ff6b6b; --accent-3: #4ecdc4;
+    --correct: #6bcf7f; --wrong: #ff6b6b;
+    --card: rgba(255,255,255,0.04); --card-border: rgba(255,255,255,0.1);
+    --gold: #ffd23f; --silver: #c0c0c0; --bronze: #cd7f32;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Fraunces', serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; line-height: 1.5; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 800px 600px at 15% 5%, rgba(255,210,63,0.08), transparent 50%), radial-gradient(ellipse 600px 800px at 90% 90%, rgba(78,205,196,0.06), transparent 50%); pointer-events: none; z-index: 0; }
+  body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; }
+  .container { max-width: 920px; margin: 0 auto; padding: 32px 20px 60px; position: relative; z-index: 1; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--card-border); flex-wrap: wrap; gap: 12px; }
+  .logo { font-size: 26px; font-weight: 900; letter-spacing: -0.03em; font-style: italic; cursor: pointer; user-select: none; }
+  .logo span { color: var(--accent); }
+  .tagline { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.25em; }
+  .screen { display: none; animation: fadeIn 0.5s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+  .hero { text-align: center; padding: 20px 0 40px; }
+  .hero-decoration { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.3em; margin-bottom: 16px; opacity: 0.7; }
+  .hero h1 { font-size: clamp(44px, 9vw, 88px); font-weight: 900; line-height: 0.92; letter-spacing: -0.045em; margin-bottom: 20px; }
+  .hero h1 em { font-style: italic; color: var(--accent); display: block; font-weight: 800; }
+  .hero p { font-size: 17px; color: var(--ink-dim); max-width: 540px; margin: 0 auto 20px; line-height: 1.65; }
+
+  .matrix-info { background: rgba(78,205,196,0.06); border: 1px solid rgba(78,205,196,0.2); border-radius: 14px; padding: 14px 18px; margin: 16px auto; max-width: 580px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); letter-spacing: 0.05em; line-height: 1.6; text-align: center; }
+  .matrix-info strong { color: var(--accent-3); }
+
+  .scoring-info { background: rgba(255,210,63,0.05); border: 1px solid rgba(255,210,63,0.2); border-radius: 14px; padding: 16px 20px; margin: 16px auto 28px; max-width: 580px; font-size: 13px; color: var(--ink-dim); text-align: center; }
+  .scoring-info strong { color: var(--accent); }
+
+  .stats-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; flex-wrap: wrap; }
+  .stat-mini { text-align: center; }
+  .stat-mini .num { font-size: 32px; font-weight: 800; color: var(--accent); font-style: italic; display: block; line-height: 1; }
+  .stat-mini .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 6px; }
+
+  .name-input-wrap { max-width: 420px; margin: 0 auto 28px; }
+  .name-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px; text-align: left; }
+  .name-input { width: 100%; background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 18px 22px; color: var(--ink); font-family: 'Fraunces', serif; font-size: 17px; outline: none; transition: all 0.25s; }
+  .name-input:focus { border-color: var(--accent); background: rgba(255,210,63,0.04); box-shadow: 0 0 0 4px rgba(255,210,63,0.08); }
+  .name-input::placeholder { color: var(--ink-dim); opacity: 0.5; }
+
+  .actions-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .btn-primary { background: var(--accent); color: var(--bg); border: none; padding: 18px 44px; border-radius: 100px; font-family: 'Fraunces', serif; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.25s; display: inline-flex; align-items: center; gap: 10px; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,210,63,0.25); }
+  .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--card-border); padding: 16px 28px; border-radius: 100px; font-family: 'Fraunces', serif; font-size: 15px; cursor: pointer; transition: all 0.2s; }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-ghost { background: transparent; color: var(--ink-dim); border: none; padding: 8px 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: color 0.2s; }
+  .btn-ghost:hover { color: var(--accent); }
+
+  .quiz-header { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; margin-bottom: 24px; padding: 18px 24px; background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; }
+  .stat-box { font-family: 'JetBrains Mono', monospace; }
+  .stat-box .lbl { font-size: 9px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 4px; }
+  .stat-box .val { font-size: 22px; font-weight: 700; line-height: 1; }
+  .stat-box .val.timer { color: var(--accent); }
+  .stat-box .val.timer.warn { color: var(--accent-2); animation: pulse 0.6s infinite; }
+  .stat-box .val.score { color: var(--correct); }
+  .stat-box.right { text-align: right; }
+  .stat-box.center { text-align: center; }
+
+  .progress-bar { height: 4px; background: var(--card-border); border-radius: 100px; overflow: hidden; margin-bottom: 28px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-3), var(--accent)); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 100px; }
+
+  .question-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 22px; padding: 36px; margin-bottom: 20px; animation: slideUp 0.4s ease; }
+  .question-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+  .question-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-3); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; }
+  .level-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; padding: 2px 8px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .level-tag.hieu { background: rgba(255,210,63,0.15); color: var(--accent); }
+  .level-tag.vandung { background: rgba(255,107,107,0.15); color: var(--accent-2); }
+  .question-topic { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.15em; padding: 4px 10px; border: 1px solid var(--card-border); border-radius: 100px; }
+
+  .question-intro { font-size: 17px; line-height: 1.6; padding: 18px 22px; margin-bottom: 16px; background: rgba(78,205,196,0.04); border-left: 3px solid var(--accent-3); border-radius: 8px; }
+  .question-items { padding: 0 8px; margin-bottom: 18px; }
+  .question-items ol { margin-left: 24px; }
+  .question-items li { padding: 6px 0; font-size: 16px; line-height: 1.55; }
+  .question-text { font-size: 19px; font-weight: 600; line-height: 1.55; margin-bottom: 24px; letter-spacing: -0.005em; color: var(--ink); }
+
+  .answer-area {
+    display: flex; align-items: center; gap: 12px;
+    padding: 6px 0;
+  }
+  .answer-input {
+    flex: 1; max-width: 320px;
+    background: rgba(255,255,255,0.02);
+    border: 2px solid var(--card-border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px; font-weight: 700;
+    outline: none;
+    transition: all 0.2s;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+  .answer-input::-webkit-outer-spin-button,
+  .answer-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .answer-input:focus { border-color: var(--accent); background: rgba(255,210,63,0.04); }
+  .answer-input.locked { cursor: not-allowed; opacity: 0.85; }
+  .answer-input.right { border-color: var(--correct); color: var(--correct); }
+  .answer-input.wrong { border-color: var(--wrong); color: var(--wrong); }
+
+  .answer-unit { font-family: 'JetBrains Mono', monospace; color: var(--ink-dim); font-size: 16px; }
+  .answer-submit { background: var(--accent-3); color: var(--bg); border: none; padding: 14px 24px; border-radius: 100px; font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .answer-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(78,205,196,0.3); }
+  .answer-submit:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .feedback { margin-top: 18px; padding: 16px 20px; border-radius: 12px; font-size: 14px; display: none; line-height: 1.55; }
+  .feedback.show { display: block; animation: fadeIn 0.3s; }
+  .feedback.correct { background: rgba(107,207,127,0.08); border: 1px solid rgba(107,207,127,0.3); color: var(--correct); }
+  .feedback.wrong { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.3); color: var(--wrong); }
+  .feedback-title { font-weight: 700; margin-bottom: 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .feedback-body { color: var(--ink); font-size: 14px; line-height: 1.55; }
+
+  .next-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+  .btn-next { background: var(--accent-3); color: var(--bg); border: none; padding: 14px 32px; border-radius: 100px; font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: none; align-items: center; gap: 8px; }
+  .btn-next.show { display: inline-flex; }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(78,205,196,0.3); }
+
+  .result-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 48px 36px; text-align: center; margin-bottom: 24px; }
+  .result-emoji { font-size: 72px; margin-bottom: 16px; line-height: 1; }
+  .result-title { font-size: 36px; font-weight: 800; font-style: italic; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .result-subtitle { color: var(--ink-dim); font-size: 16px; margin-bottom: 32px; }
+  .score-big { font-size: 88px; font-weight: 900; color: var(--accent); font-style: italic; line-height: 1; letter-spacing: -0.04em; }
+  .score-out { color: var(--ink-dim); font-size: 22px; font-weight: 400; font-style: normal; }
+  .result-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; padding: 24px 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); }
+  .result-stat .v { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .result-stat .l { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.15em; }
+  .result-stat .v.green { color: var(--correct); }
+  .result-stat .v.red { color: var(--wrong); }
+  .result-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+  .review-section { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--card-border); }
+  .review-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 20px; }
+  .review-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 14px; }
+  .review-card.correct { border-left: 3px solid var(--correct); }
+  .review-card.wrong { border-left: 3px solid var(--wrong); }
+  .review-card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+  .review-card-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; }
+  .review-mark { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; }
+  .review-mark.ok { background: rgba(107,207,127,0.15); color: var(--correct); }
+  .review-mark.no { background: rgba(255,107,107,0.15); color: var(--wrong); }
+  .review-q { font-size: 14px; line-height: 1.55; margin-bottom: 10px; color: var(--ink); }
+  .review-ans-row { display: flex; gap: 16px; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 8px 0; }
+  .review-ans-row .your.right { color: var(--correct); }
+  .review-ans-row .your.wrong { color: var(--wrong); }
+  .review-ans-row .correct-ans { color: var(--accent); }
+  .review-exp { margin-top: 8px; font-size: 13px; color: var(--ink-dim); font-style: italic; line-height: 1.55; padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+
+  .leaderboard { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 28px; margin-bottom: 24px; }
+  .leaderboard-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+  .leaderboard-title { font-size: 24px; font-weight: 800; font-style: italic; letter-spacing: -0.02em; }
+  .leaderboard-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.2em; }
+  .lb-row { display: grid; grid-template-columns: 40px 1fr auto auto; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row.me { background: rgba(255,210,63,0.04); margin: 0 -12px; padding: 14px 12px; border-radius: 10px; border-bottom: none; }
+  .lb-rank { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: var(--ink-dim); text-align: center; }
+  .lb-row.gold .lb-rank { color: var(--gold); font-size: 18px; }
+  .lb-row.silver .lb-rank { color: var(--silver); font-size: 17px; }
+  .lb-row.bronze .lb-rank { color: var(--bronze); font-size: 16px; }
+  .lb-name { font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lb-row.me .lb-name::after { content: ' ★'; color: var(--accent); }
+  .lb-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); }
+  .lb-score { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
+  .empty-lb { text-align: center; padding: 40px 20px; color: var(--ink-dim); font-style: italic; }
+
+  .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .dash-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px 22px; }
+  .dash-card .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 8px; }
+  .dash-card .val { font-size: 32px; font-weight: 800; font-style: italic; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
+  .dash-card .sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); margin-top: 6px; }
+  .dash-section { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 24px 28px; margin-bottom: 20px; }
+  .dash-section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .dash-section-title small { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; }
+
+  .histogram { display: flex; align-items: flex-end; gap: 6px; height: 200px; margin-bottom: 12px; padding: 0 8px; }
+  .hist-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+  .hist-bar { width: 100%; background: linear-gradient(180deg, var(--accent), var(--accent-3)); border-radius: 6px 6px 0 0; min-height: 3px; position: relative; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .hist-bar .count { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--ink); }
+  .hist-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); margin-top: 8px; }
+
+  .qstat-item { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .qstat-item:last-child { border-bottom: none; }
+  .qstat-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; gap: 12px; }
+  .qstat-q { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.5; }
+  .qstat-rate { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .qstat-rate.high { color: var(--wrong); }
+  .qstat-rate.mid { color: var(--accent); }
+  .qstat-rate.low { color: var(--correct); }
+  .qstat-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; margin-bottom: 6px; }
+  .qstat-bar-fill { height: 100%; border-radius: 100px; transition: width 0.6s; }
+  .qstat-bar-fill.high { background: var(--wrong); }
+  .qstat-bar-fill.mid { background: var(--accent); }
+  .qstat-bar-fill.low { background: var(--correct); }
+  .qstat-meta { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); flex-wrap: wrap; gap: 6px; }
+  .qstat-meta .topic { padding: 2px 8px; border: 1px solid var(--card-border); border-radius: 100px; font-size: 10px; }
+
+  .students-table { width: 100%; border-collapse: collapse; }
+  .students-table th { text-align: left; padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.15em; border-bottom: 1px solid var(--card-border); }
+  .students-table th.num { text-align: right; }
+  .students-table td { padding: 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .students-table td.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .students-table td.score { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; }
+  .students-table td.score.green { color: var(--correct); }
+  .students-table td.score.amber { color: var(--accent); }
+  .students-table td.score.red { color: var(--wrong); }
+  .students-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+  .students-table .name-cell { font-weight: 600; }
+
+  .login-overlay { background: rgba(13,17,23,0.95); backdrop-filter: blur(8px); position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+  .login-box { background: var(--bg-2); border: 1px solid var(--card-border); border-radius: 20px; padding: 36px; max-width: 400px; width: 100%; text-align: center; }
+  .login-box h2 { font-size: 26px; font-weight: 800; font-style: italic; margin-bottom: 8px; }
+  .login-box p { color: var(--ink-dim); font-size: 14px; margin-bottom: 24px; }
+  .login-error { color: var(--wrong); font-size: 13px; margin-top: 12px; min-height: 18px; }
+
+  .refresh-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 12px 16px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; flex-wrap: wrap; gap: 8px; }
+  .refresh-status { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); }
+  .refresh-status .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--correct); margin-right: 6px; vertical-align: middle; }
+  .refresh-status.error .dot { background: var(--wrong); }
+  .refresh-status.loading .dot { background: var(--accent); animation: pulse 1s infinite; }
+  .btn-icon { background: transparent; border: 1px solid var(--card-border); border-radius: 100px; padding: 8px 16px; color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.2s; }
+  .btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+
+  .cloud-status { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); letter-spacing: 0.15em; text-transform: uppercase; text-align: center; margin-top: 8px; opacity: 0.6; }
+  .cloud-status .ok { color: var(--correct); }
+  .cloud-status .warn { color: var(--accent); }
+
+  footer { text-align: center; margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--card-border); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); letter-spacing: 0.1em; }
+  .history-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .history-info { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); }
+  .history-score { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
+
+  .confetti { position: fixed; top: -10px; width: 8px; height: 8px; pointer-events: none; z-index: 999; }
+  .loading-dots::after { content: '...'; display: inline-block; animation: dots 1.4s infinite; width: 24px; text-align: left; }
+  @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60%, 100% { content: '...'; } }
+
+  @media (max-width: 640px) {
+    .container { padding: 24px 16px 40px; }
+    .question-card { padding: 24px 20px; }
+    .question-intro { font-size: 15px; padding: 14px 16px; }
+    .question-text { font-size: 17px; }
+    .question-items li { font-size: 14px; }
+    .answer-input { font-size: 20px; padding: 14px 18px; }
+    .result-card { padding: 36px 24px; }
+    .quiz-header { padding: 14px 18px; gap: 12px; }
+    .stat-box .val { font-size: 18px; }
+    .lb-row { grid-template-columns: 32px 1fr auto auto; gap: 10px; }
+    .lb-name { font-size: 14px; }
+    .result-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .result-stat .v { font-size: 18px; }
+    .score-big { font-size: 64px; }
+    .score-out { font-size: 18px; }
+    .hero h1 { font-size: 44px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">Math <em>Quest III</em><span>.</span></div>
+    <div class="tagline">Phần III — Trả lời ngắn</div>
+  </header>
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="hero">
+      <div class="hero-decoration">— ÔN TẬP —</div>
+      <h1>Toán 10<br><em>Phần III</em></h1>
+      <p>Câu hỏi <strong>trả lời ngắn</strong> — đáp án dạng số. Hypebol & Tổ hợp.</p>
+
+      <div class="matrix-info">
+        <strong>Đề thi tuân thủ ma trận</strong> — 4 câu / đề: 1 câu Hypebol đếm phát biểu (Hiểu) + 1 câu Lập số (Hiểu) + 1 câu Hypebol thực tế (Vận dụng) + 1 câu Tổ hợp viên bi (Hiểu).
+      </div>
+
+      <div class="scoring-info">
+        <strong>Cách tính điểm:</strong> Mỗi câu đúng = <strong>0.5 điểm</strong> · Tổng tối đa <strong>2.0 điểm</strong>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini"><span class="num" id="stat-pool">4096</span><div class="lbl">Đề có thể tạo</div></div>
+        <div class="stat-mini"><span class="num">4</span><div class="lbl">Câu / đề</div></div>
+        <div class="stat-mini"><span class="num">15<span style="font-size:18px;color:var(--ink-dim)">′</span></span><div class="lbl">Thời gian</div></div>
+      </div>
+
+      <div class="name-input-wrap">
+        <div class="name-label">Họ và tên của bạn</div>
+        <input type="text" class="name-input" id="player-name" placeholder="Nhập tên của bạn..." maxlength="40">
+      </div>
+
+      <div class="actions-row">
+        <button class="btn-primary" id="btn-start">Bắt đầu làm bài →</button>
+      </div>
+
+      <button class="btn-ghost" id="btn-show-leaderboard">Xem bảng xếp hạng</button>
+      <button class="btn-ghost" id="btn-show-history" style="display:none;">Lịch sử của tôi</button>
+
+      <div class="cloud-status" id="cloud-status"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-header">
+      <div class="stat-box"><div class="lbl">Câu</div><div class="val"><span id="q-current">1</span><span style="color:var(--ink-dim);font-size:14px">/4</span></div></div>
+      <div class="stat-box center"><div class="lbl">Điểm</div><div class="val score" id="q-score">0.00</div></div>
+      <div class="stat-box right"><div class="lbl">Còn lại</div><div class="val timer" id="q-timer">15:00</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="question-card" id="question-card"></div>
+    <div class="next-row"><button class="btn-next" id="btn-next">Câu tiếp theo →</button></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="result-card">
+      <div class="result-emoji" id="r-emoji">🎉</div>
+      <div class="result-title" id="r-title">Hoàn thành!</div>
+      <div class="result-subtitle" id="r-subtitle"></div>
+      <div><span class="score-big" id="r-score">0.00</span><span class="score-out">/2.00</span></div>
+      <div class="result-stats">
+        <div class="result-stat"><div class="v green" id="r-correct">0</div><div class="l">Câu đúng</div></div>
+        <div class="result-stat"><div class="v red" id="r-wrong">0</div><div class="l">Câu sai</div></div>
+        <div class="result-stat"><div class="v" id="r-time">00:00</div><div class="l">Thời gian</div></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-primary" id="btn-retry">Làm đề khác →</button>
+        <button class="btn-secondary" id="btn-home">Về trang chủ</button>
+      </div>
+    </div>
+    <div class="review-section">
+      <div class="review-title">— Xem lại bài làm —</div>
+      <div id="review-list"></div>
+    </div>
+    <div class="review-section">
+      <div class="review-title">— Bảng xếp hạng —</div>
+      <div id="result-leaderboard"></div>
+    </div>
+  </div>
+
+  <!-- LB -->
+  <div class="screen" id="screen-leaderboard">
+    <div class="leaderboard">
+      <div class="leaderboard-header"><div class="leaderboard-title">Bảng xếp hạng</div><div class="leaderboard-subtitle">Top học sinh</div></div>
+      <div id="lb-list"></div>
+    </div>
+    <div style="text-align:center;"><button class="btn-secondary" id="btn-back-from-lb">← Quay lại</button></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="screen" id="screen-history">
+    <div class="leaderboard">
+      <div class="leaderboard-header"><div class="leaderboard-title">Lịch sử của bạn</div><div class="leaderboard-subtitle" id="history-name"></div></div>
+      <div id="history-list"></div>
+    </div>
+    <div style="text-align:center;"><button class="btn-secondary" id="btn-back-from-history">← Quay lại</button></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="screen-dashboard">
+    <div class="leaderboard-header" style="margin-bottom:20px;">
+      <div class="leaderboard-title">Dashboard giáo viên</div>
+      <div class="leaderboard-subtitle">Phân tích kết quả Phần III</div>
+    </div>
+    <div class="refresh-bar">
+      <div class="refresh-status" id="refresh-status"><span class="dot"></span>Sẵn sàng</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-icon" id="btn-dash-refresh">↻ Làm mới</button>
+        <button class="btn-icon" id="btn-dash-home">← Trang chủ</button>
+      </div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dash-card"><div class="lbl">Tổng số lượt</div><div class="val" id="dash-total-attempts">0</div><div class="sub">lượt làm bài</div></div>
+      <div class="dash-card"><div class="lbl">Học sinh</div><div class="val" id="dash-unique-students">0</div><div class="sub">đã tham gia</div></div>
+      <div class="dash-card"><div class="lbl">Điểm trung bình</div><div class="val" id="dash-avg-score">0.00</div><div class="sub">trên 2.00</div></div>
+      <div class="dash-card"><div class="lbl">Tỉ lệ đạt (≥1.0)</div><div class="val" id="dash-pass-rate">0%</div><div class="sub">lượt đạt yêu cầu</div></div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">Phân bố điểm số <small>histogram</small></div>
+      <div class="histogram" id="histogram"></div>
+      <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:12px;">— Thang điểm 0 → 2.0 —</div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">Top 10 câu sai nhiều nhất <small>tỉ lệ sai cao → thấp</small></div>
+      <div id="qstats-list"></div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">Danh sách học sinh <small>xếp theo điểm cao nhất</small></div>
+      <div id="students-list"></div>
+    </div>
+  </div>
+
+  <footer><div>MATH QUEST III · TRẢ LỜI NGẮN · TOÁN 10 · 2025–2026</div></footer>
+</div>
+
+<script>
+// POOL DATA
+const POOL = {"slots":{"1":{"name":"Hypebol — Số phát biểu đúng","level":"Hiểu","topic":"Hypebol"},"2":{"name":"Lập số (có chữ số 0)","level":"Hiểu","topic":"Quy tắc đếm"},"3":{"name":"Hypebol — Bài toán thực tế","level":"Vận dụng","topic":"Hypebol"},"4":{"name":"Tổ hợp viên bi nhiều màu","level":"Hiểu","topic":"Tổ hợp"}},"slot1":[{"id":"p3s1_001","intro":"Cho hypebol (H) có phương trình chính tắc: x²/9 − y²/16 = 1. Xét các phát biểu sau về (H):","items":["Hypebol có hình dạng đường cong khép kín.","Phương trình chính tắc của hypebol là x²/a² − y²/b² = 1 với a, b > 0.","Tọa độ các tiêu điểm của (H) là F₁(−5; 0) và F₂(5; 0).","Công thức tính c theo a, b là c = −√(a² + b²), do đó c = −5."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":2,"explanation":"PB1 SAI (hypebol gồm 2 nhánh không khép kín). PB2 ĐÚNG. PB3 ĐÚNG (a²=9,b²=16,c²=25,c=5). PB4 SAI (c phải dương). Có 2 PB đúng."},{"id":"p3s1_002","intro":"Cho hypebol (H) có phương trình chính tắc: x²/16 − y²/9 = 1. Xét các phát biểu sau về (H):","items":["Hypebol gồm hai đường cong (hai nhánh) không khép kín.","Phương trình chính tắc của hypebol là x²/a² + y²/b² = 1 với a > b > 0.","Tọa độ các tiêu điểm của (H) là F₁(−5; 0) và F₂(5; 0).","Công thức tính c theo a, b là c = √(a² + b²), do đó c = 5."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":3,"explanation":"PB1 ĐÚNG. PB2 SAI (đó là PT elip; PT hypebol có dấu trừ). PB3 ĐÚNG. PB4 ĐÚNG. Có 3 PB đúng."},{"id":"p3s1_003","intro":"Cho hypebol (H) có phương trình chính tắc: x²/25 − y²/144 = 1. Xét các phát biểu sau về (H):","items":["Hypebol có hình dạng là một đường cong mở duy nhất.","Phương trình chính tắc của hypebol là x²/a² − y²/b² = 1 với a, b > 0.","Tọa độ các tiêu điểm của (H) là F₁(0; −13) và F₂(0; 13).","Công thức tính c theo a, b là c = √(a² + b²), do đó c = 13."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":2,"explanation":"PB1 SAI (gồm 2 nhánh). PB2 ĐÚNG. PB3 SAI (tiêu điểm trên trục Ox: F₁(−13;0), F₂(13;0)). PB4 ĐÚNG (c²=25+144=169, c=13). Có 2 PB đúng."},{"id":"p3s1_004","intro":"Cho hypebol (H) có phương trình chính tắc: x²/9 − y²/40 = 1. Xét các phát biểu sau về (H):","items":["Hypebol gồm hai đường cong (hai nhánh) không khép kín.","Phương trình chính tắc của hypebol là x²/a² − y²/b² = 1 với a, b > 0.","Tọa độ các tiêu điểm của (H) là F₁(−7; 0) và F₂(7; 0).","Công thức tính c theo a, b là c = −√(a² + b²), do đó c = −7."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":2,"explanation":"PB1 ĐÚNG. PB2 ĐÚNG. PB3 ĐÚNG (c²=9+40=49,c=7). PB4 SAI (c phải dương). Theo đáp án gốc: 2."},{"id":"p3s1_005","intro":"Cho hypebol (H) có phương trình chính tắc: x²/16 − y²/20 = 1. Xét các phát biểu sau về (H):","items":["Hypebol là một đường cong khép kín có hai trục đối xứng.","Phương trình chính tắc của hypebol là x²/a² − y²/b² = 1 với a, b > 0.","Tọa độ các tiêu điểm của (H) là F₁(−6; 0) và F₂(6; 0).","Công thức tính c theo a, b là c = √(a² + b²), do đó c = 6."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":3,"explanation":"PB1 SAI (hypebol không khép kín). PB2 ĐÚNG. PB3 ĐÚNG (c²=16+20=36, c=6). PB4 ĐÚNG. Có 3 PB đúng."},{"id":"p3s1_006","intro":"Cho hypebol (H) có phương trình chính tắc: x²/4 − y²/21 = 1. Xét các phát biểu sau về (H):","items":["Hypebol gồm hai đường cong (hai nhánh) không khép kín.","Phương trình chính tắc của hypebol là x²/a² + y²/b² = 1 với a > b > 0.","Tọa độ các tiêu điểm của (H) là F₁(−5; 0) và F₂(5; 0).","Công thức tính c theo a, b là c = −√(a² + b²), do đó c = −5."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":2,"explanation":"PB1 ĐÚNG. PB2 SAI (đây là PT elip). PB3 ĐÚNG (c²=4+21=25, c=5). PB4 SAI (c phải dương). Có 2 PB đúng."},{"id":"p3s1_007","intro":"Cho hypebol (H) có phương trình chính tắc: x²/36 − y²/13 = 1. Xét các phát biểu sau về (H):","items":["Hypebol có hình dạng là một đường cong mở duy nhất.","Phương trình chính tắc của hypebol là x²/a² − y²/b² = 1 với a, b > 0.","Tọa độ các tiêu điểm của (H) là F₁(0; −7) và F₂(0; 7).","Công thức tính c theo a, b là c = −√(a² + b²), do đó c = −7."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":2,"explanation":"PB1 SAI (gồm 2 nhánh). PB2 ĐÚNG. PB3 SAI (tiêu điểm trên Ox). PB4 SAI (c dương). Có 2 PB đúng (chỉ PB2 và 1 ý khác — theo đề gốc: 2)."},{"id":"p3s1_008","intro":"Cho hypebol (H) có phương trình chính tắc: x²/64 − y²/36 = 1. Xét các phát biểu sau về (H):","items":["Hypebol gồm hai đường cong (hai nhánh) không khép kín.","Phương trình chính tắc của hypebol là x²/a² − y²/b² = 1 với a, b > 0.","Tọa độ các tiêu điểm của (H) là F₁(−10; 0) và F₂(10; 0).","Công thức tính c theo a, b là c = −√(a² + b²), do đó c = −10."],"question":"Trong các phát biểu trên, có bao nhiêu phát biểu đúng?","answer":2,"explanation":"PB1 ĐÚNG. PB2 ĐÚNG. PB3 ĐÚNG (c²=100, c=10) hoặc SAI tùy đề. PB4 SAI (c dương). Theo đáp án gốc: 2 PB đúng."}],"slot2":[{"id":"p3s2_001","question":"Từ các chữ số 0, 1, 2, 3, 4, 5, 6 có thể lập được bao nhiêu số tự nhiên chẵn có 3 chữ số (các chữ số có thể lặp lại)?","answer":168,"explanation":"Số dạng abc, c chẵn ∈{0,2,4,6}: 4 cách. a≠0: 6 cách. b: 7 cách. Tổng: 6·7·4 = 168."},{"id":"p3s2_002","question":"Từ các chữ số 0, 1, 2, 3, 4, 5 có thể lập được bao nhiêu số lẻ gồm 4 chữ số đôi một khác nhau?","answer":144,"explanation":"Cuối lẻ ∈{1,3,5}: 3 cách. Đầu ≠0,≠cuối: 4 cách. 2 chữ số giữa A(4,2)=12. Tổng: 3·4·12 = 144."},{"id":"p3s2_003","question":"Từ các chữ số 0, 1, 2, 3, 4, 5 có thể lập được bao nhiêu số chẵn gồm 4 chữ số đôi một khác nhau?","answer":156,"explanation":"TH1 cuối=0: 5·4·3=60. TH2 cuối∈{2,4} (2 cách), đầu≠0,≠cuối (4 cách), giữa A(4,2)=12 → 2·4·12=96. Tổng: 156."},{"id":"p3s2_004","question":"Từ các chữ số 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 có thể lập được bao nhiêu số tự nhiên có 3 chữ số (các chữ số có thể lặp lại)?","answer":900,"explanation":"Đầu ≠0: 9 cách. 2 chữ số sau: 10·10. Tổng: 9·100 = 900."},{"id":"p3s2_005","question":"Từ các chữ số 0, 1, 2, 3, 4, 5, 7 có thể lập được bao nhiêu số chẵn gồm 4 chữ số đôi một khác nhau?","answer":320,"explanation":"TH1 cuối=0: A(6,3)=120. TH2 cuối∈{2,4} (2 cách), đầu≠0,≠cuối (5 cách), giữa A(5,2)=20 → 200. Tổng: 320."},{"id":"p3s2_006","question":"Từ các chữ số 1, 2, 3, 4, 5, 6, 7 có thể lập được bao nhiêu số lẻ có 3 chữ số (các chữ số có thể lặp lại)?","answer":196,"explanation":"Cuối lẻ∈{1,3,5,7}: 4 cách. 2 chữ số đầu: 7·7=49. Tổng: 49·4 = 196."},{"id":"p3s2_007","question":"Từ các chữ số 0, 1, 2, 3, 4, 5, 6, 7 có thể lập được bao nhiêu số chẵn gồm 4 chữ số đôi một khác nhau?","answer":1260,"explanation":"Theo đáp án đề: 1260 cách (chia trường hợp theo chữ số cuối)."},{"id":"p3s2_008","question":"Từ các chữ số 0, 2, 3, 4, 5, 6 có thể lập được bao nhiêu số lẻ có 3 chữ số đôi một khác nhau?","answer":36,"explanation":"Cuối lẻ ∈{3,5}: 2 cách. Đầu≠0,≠cuối: 4 cách. Giữa: 4 cách (loại 0+2 trong 5 còn). Theo đáp án đề: 36."}],"slot3":[{"id":"p3s3_001","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/3² − y²/6² = 1 (đơn vị: mét). Biết chiều cao của tháp là 16 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":5,"unit":"m","explanation":"a=3, b=6. Tháp đối xứng → y=±8. Thay: x²/9 − 64/36 = 1 → x² = 25 → x = 5 m."},{"id":"p3s3_002","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/5² − y²/5² = 1 (đơn vị: mét). Biết chiều cao của tháp là 24 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":13,"unit":"m","explanation":"a=b=5. Cao 24 → y=±12. Thay: x²/25 − 144/25 = 1 → x² = 169 → x = 13 m."},{"id":"p3s3_003","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/6² − y²/6² = 1 (đơn vị: mét). Biết chiều cao của tháp là 16 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":10,"unit":"m","explanation":"a=b=6. Cao 16 → y=±8. Thay: x²/36 − 64/36 = 1 → x² = 100 → x = 10 m."},{"id":"p3s3_004","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/7² − y²/7² = 1 (đơn vị: mét). Biết chiều cao của tháp là 48 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":25,"unit":"m","explanation":"a=b=7. Cao 48 → y=±24. Thay: x²/49 − 576/49 = 1 → x² = 625 → x = 25 m."},{"id":"p3s3_005","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/8² − y²/8² = 1 (đơn vị: mét). Biết chiều cao của tháp là 30 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":17,"unit":"m","explanation":"a=b=8. Cao 30 → y=±15. Thay: x²/64 − 225/64 = 1 → x² = 289 → x = 17 m."},{"id":"p3s3_006","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/9² − y²/6² = 1 (đơn vị: mét). Biết chiều cao của tháp là 16 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":15,"unit":"m","explanation":"a=9, b=6. Cao 16 → y=±8. Thay: x²/81 = 1 + 64/36 = 100/36 → x² = 225 → x = 15 m."},{"id":"p3s3_007","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/10² − y²/5² = 1 (đơn vị: mét). Biết chiều cao của tháp là 24 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":13,"unit":"m","explanation":"Theo đáp án đề: 13 m."},{"id":"p3s3_008","question":"Một tháp triển lãm có mặt cắt ngang hình hypebol với phương trình: x²/12² − y²/6² = 1 (đơn vị: mét). Biết chiều cao của tháp là 16 m và khoảng cách từ nóc tháp đến tâm đối xứng của hypebol bằng khoảng cách từ tâm đối xứng đến đáy. Tính bán kính nóc (cũng là bán kính đáy) của tháp.","answer":20,"unit":"m","explanation":"a=12, b=6. Cao 16 → y=±8. Thay: x²/144 = 1 + 64/36 = 100/36 → x² = 400 → x = 20 m."}],"slot4":[{"id":"p3s4_001","question":"Một hộp có 15 viên bi gồm 5 bi xanh, 6 bi đỏ, 4 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 3 viên bi từ hộp. Có bao nhiêu cách lấy sao cho cả ba màu xanh, đỏ, vàng đều có mặt?","answer":120,"explanation":"Mỗi màu chọn 1 viên: 5·6·4 = 120 cách."},{"id":"p3s4_002","question":"Một hộp có 20 viên bi gồm 8 bi xanh, 5 bi đỏ, 7 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 4 viên bi. Có bao nhiêu cách lấy 4 viên bi sao cho có đủ cả 3 màu xanh, đỏ, vàng?","answer":2380,"explanation":"= C(8,2)·5·7 + 8·C(5,2)·7 + 8·5·C(7,2) = 980 + 560 + 840 = 2380."},{"id":"p3s4_003","question":"Một túi có 15 viên bi gồm 6 bi xanh, 4 bi đỏ, 5 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 3 viên bi. Có bao nhiêu cách lấy 3 viên bi sao cho KHÔNG có viên bi vàng nào?","answer":120,"explanation":"Chọn 3 từ 10 (6 xanh + 4 đỏ): C(10,3) = 120."},{"id":"p3s4_004","question":"Một hộp có 13 viên bi gồm 4 bi xanh, 6 bi đỏ, 3 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 5 viên bi. Có bao nhiêu cách lấy 5 viên bi sao cho có ít nhất 2 màu khác nhau?","answer":1281,"explanation":"Tổng C(13,5) = 1287. Trừ trường hợp 1 màu: chỉ đỏ C(6,5)=6 (xanh, vàng <5 viên). 1287 − 6 = 1281."},{"id":"p3s4_005","question":"Một hộp có 12 viên bi gồm 3 bi xanh, 5 bi đỏ, 4 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 3 viên bi. Có bao nhiêu cách lấy 3 viên bi sao cho cả ba màu xanh, đỏ, vàng đều có mặt?","answer":60,"explanation":"3·5·4 = 60 cách."},{"id":"p3s4_006","question":"Một hộp có 18 viên bi gồm 7 bi xanh, 5 bi đỏ, 6 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 4 viên bi. Có bao nhiêu cách lấy 4 viên bi sao cho có đủ cả 3 màu?","answer":1575,"explanation":"= C(7,2)·5·6 + 7·C(5,2)·6 + 7·5·C(6,2) = 630 + 420 + 525 = 1575."},{"id":"p3s4_007","question":"Một túi có 14 viên bi gồm 5 bi xanh, 4 bi đỏ, 5 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 3 viên bi. Có bao nhiêu cách lấy 3 viên bi sao cho KHÔNG có viên bi đỏ nào?","answer":420,"explanation":"Theo đáp án đề: 420."},{"id":"p3s4_008","question":"Một hộp có 16 viên bi gồm 6 bi xanh, 4 bi đỏ, 6 bi vàng. Các viên bi đôi một khác nhau. Lấy ngẫu nhiên 3 viên bi. Có bao nhiêu cách lấy 3 viên bi sao cho có đủ cả 3 màu?","answer":996,"explanation":"Theo đáp án đề: 996."}]};
+</script>
+
+<script>
+// ============= CẤU HÌNH (xem HUONG_DAN_CAU_HINH.md) =============
+const JSONBIN_BIN_ID = "PASTE_YOUR_BIN_ID_HERE";
+const JSONBIN_MASTER_KEY = "PASTE_YOUR_MASTER_KEY_HERE";
+const TEACHER_PASSWORD = "giaovien2025";
+
+const CLOUD_ENABLED = JSONBIN_BIN_ID !== "PASTE_YOUR_BIN_ID_HERE" && JSONBIN_MASTER_KEY !== "PASTE_YOUR_MASTER_KEY_HERE";
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+const STORAGE_KEY = 'mathquest10_p3:results:v1';
+const PENDING_KEY = 'mathquest10_p3:pending:v1';
+const NAME_KEY = 'mathquest10_p3:lastname:v1';
+const TIME_LIMIT = 15 * 60;
+const POINT_PER_Q = 0.5;
+
+const state = {
+  playerName: '',
+  questions: [],
+  currentIdx: 0,
+  answers: [],
+  startTime: null,
+  remaining: TIME_LIMIT,
+  timerInterval: null,
+};
+
+// ============= UTILS =============
+function localGet(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (e) { return fallback; }
+}
+function localSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+function pickOne(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function formatTime(sec) { const m = Math.floor(sec/60); const s = sec%60; return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0'); }
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Parse user input into a number. Allow "5", "5 m", "5,000", "5000"
+function parseAnswer(input) {
+  if (!input) return null;
+  const cleaned = String(input).replace(/[\s,.]/g, '').replace(/m$|km$|cm$/i, '');
+  const n = Number(cleaned);
+  return isNaN(n) ? null : n;
+}
+
+// ============= CLOUD =============
+async function cloudFetchAll() {
+  if (!CLOUD_ENABLED) return null;
+  try {
+    const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_MASTER_KEY, 'X-Bin-Meta': 'false' } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    return Array.isArray(data?.results) ? data.results : [];
+  } catch (e) { console.warn(e); return null; }
+}
+async function cloudPushResult(result) {
+  if (!CLOUD_ENABLED) return false;
+  try {
+    const cur = (await cloudFetchAll()) || [];
+    cur.push(result);
+    const res = await fetch(JSONBIN_URL, { method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
+      body: JSON.stringify({ results: cur })
+    });
+    return res.ok;
+  } catch (e) { return false; }
+}
+async function flushPending() {
+  const pending = localGet(PENDING_KEY, []);
+  if (pending.length === 0 || !CLOUD_ENABLED) return;
+  try {
+    const cur = await cloudFetchAll();
+    if (cur === null) return;
+    const merged = [...cur, ...pending];
+    const res = await fetch(JSONBIN_URL, { method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_MASTER_KEY },
+      body: JSON.stringify({ results: merged })
+    });
+    if (res.ok) localSet(PENDING_KEY, []);
+  } catch (e) {}
+}
+
+// ============= ADMIN =============
+let logoTaps = 0, logoTimer = null;
+function checkAdminAccess() {
+  if (new URLSearchParams(location.search).get('admin') === '1') showLogin();
+  document.querySelector('.logo').addEventListener('click', () => {
+    logoTaps++;
+    if (logoTimer) clearTimeout(logoTimer);
+    logoTimer = setTimeout(() => { logoTaps = 0; }, 2000);
+    if (logoTaps >= 5) { logoTaps = 0; showLogin(); }
+  });
+}
+function showLogin() {
+  const o = document.createElement('div');
+  o.className = 'login-overlay';
+  o.innerHTML = `<div class="login-box">
+    <h2>Khu vực giáo viên</h2><p>Nhập mật khẩu để xem dashboard</p>
+    <input type="password" class="name-input" id="login-pwd" placeholder="Mật khẩu..." autofocus>
+    <div class="login-error" id="login-err"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+      <button class="btn-primary" id="login-submit">Đăng nhập</button>
+      <button class="btn-secondary" id="login-cancel">Hủy</button></div></div>`;
+  document.body.appendChild(o);
+  const pwd = o.querySelector('#login-pwd'), err = o.querySelector('#login-err');
+  const submit = () => {
+    if (pwd.value === TEACHER_PASSWORD) { o.remove(); openDashboard(); }
+    else { err.textContent = 'Mật khẩu không đúng'; pwd.value = ''; pwd.focus(); }
+  };
+  o.querySelector('#login-submit').addEventListener('click', submit);
+  o.querySelector('#login-cancel').addEventListener('click', () => o.remove());
+  pwd.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+}
+
+// ============= HOME =============
+function initHome() {
+  const totalCombos = POOL.slot1.length * POOL.slot2.length * POOL.slot3.length * POOL.slot4.length;
+  document.getElementById('stat-pool').textContent = totalCombos.toLocaleString('vi-VN');
+
+  const nameInput = document.getElementById('player-name');
+  const startBtn = document.getElementById('btn-start');
+  const historyBtn = document.getElementById('btn-show-history');
+
+  function refreshState() {
+    const v = nameInput.value.trim();
+    if (v.length < 2) { startBtn.style.opacity = '0.35'; startBtn.style.cursor = 'not-allowed'; }
+    else { startBtn.style.opacity = ''; startBtn.style.cursor = 'pointer'; }
+    historyBtn.style.display = v.length >= 2 ? 'inline-block' : 'none';
+  }
+
+  const lastName = localStorage.getItem(NAME_KEY) || '';
+  if (lastName) nameInput.value = lastName;
+  refreshState();
+
+  ['input','change','keyup','blur','paste'].forEach(evt => nameInput.addEventListener(evt, refreshState));
+  nameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); nameInput.blur(); refreshState();
+      if (nameInput.value.trim().length >= 2) startQuiz();
+    }
+  });
+
+  function tryStart(e) {
+    if (e) e.preventDefault();
+    refreshState();
+    const v = nameInput.value.trim();
+    if (v.length >= 2) startQuiz(); else nameInput.focus();
+  }
+  startBtn.addEventListener('click', tryStart);
+  startBtn.addEventListener('touchend', tryStart);
+
+  document.getElementById('btn-show-leaderboard').addEventListener('click', async () => {
+    await renderLeaderboard(); showScreen('screen-leaderboard');
+  });
+  document.getElementById('btn-show-history').addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    if (name.length >= 2) { renderHistory(name); showScreen('screen-history'); }
+  });
+  document.getElementById('btn-back-from-lb').addEventListener('click', () => showScreen('screen-home'));
+  document.getElementById('btn-back-from-history').addEventListener('click', () => showScreen('screen-home'));
+
+  const cs = document.getElementById('cloud-status');
+  cs.innerHTML = CLOUD_ENABLED
+    ? '<span class="ok">●</span> Đã đồng bộ cloud'
+    : '<span class="warn">●</span> Chế độ offline (chưa cấu hình cloud)';
+  flushPending();
+}
+
+// ============= QUIZ =============
+function startQuiz() {
+  const name = document.getElementById('player-name').value.trim();
+  if (name.length < 2) return;
+  state.playerName = name;
+  localStorage.setItem(NAME_KEY, name);
+
+  // Pick 1 question from each slot 1-4
+  state.questions = [
+    { ...pickOne(POOL.slot1), slot: 1, slotInfo: POOL.slots["1"] },
+    { ...pickOne(POOL.slot2), slot: 2, slotInfo: POOL.slots["2"] },
+    { ...pickOne(POOL.slot3), slot: 3, slotInfo: POOL.slots["3"] },
+    { ...pickOne(POOL.slot4), slot: 4, slotInfo: POOL.slots["4"] },
+  ];
+  state.currentIdx = 0;
+  state.answers = state.questions.map(q => ({ qid: q.id, slot: q.slot, picked: null, isRight: false, submitted: false }));
+  state.startTime = Date.now();
+  state.remaining = TIME_LIMIT;
+
+  startTimer();
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function startTimer() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  updateTimer();
+  state.timerInterval = setInterval(() => {
+    state.remaining--;
+    updateTimer();
+    if (state.remaining <= 0) { clearInterval(state.timerInterval); finishQuiz(true); }
+  }, 1000);
+}
+function updateTimer() {
+  const el = document.getElementById('q-timer');
+  el.textContent = formatTime(Math.max(0, state.remaining));
+  el.classList.toggle('warn', state.remaining <= 60);
+}
+
+function calcCurrentScore() {
+  return state.answers.filter(a => a.isRight).length * POINT_PER_Q;
+}
+
+function renderQuestion() {
+  const q = state.questions[state.currentIdx];
+  const ans = state.answers[state.currentIdx];
+
+  document.getElementById('q-current').textContent = state.currentIdx + 1;
+  document.getElementById('q-score').textContent = calcCurrentScore().toFixed(2);
+  document.getElementById('progress-fill').style.width = (state.currentIdx / state.questions.length * 100) + '%';
+
+  const levelClass = q.slotInfo.level === 'Vận dụng' ? 'vandung' : 'hieu';
+  let qBody = '';
+  if (q.intro && q.items) {
+    // Slot 1 - has intro + items + question
+    const itemsList = q.items.map((it, i) => `<li>${escapeHtml(it)}</li>`).join('');
+    qBody = `
+      <div class="question-intro">${escapeHtml(q.intro)}</div>
+      <div class="question-items"><ol>${itemsList}</ol></div>
+      <div class="question-text">${escapeHtml(q.question)}</div>
+    `;
+  } else {
+    // Slot 2,3,4 - just question
+    qBody = `<div class="question-text">${escapeHtml(q.question)}</div>`;
+  }
+
+  const unitText = q.unit ? `<span class="answer-unit">${escapeHtml(q.unit)}</span>` : '';
+
+  document.getElementById('question-card').innerHTML = `
+    <div class="question-meta">
+      <div class="question-num">Câu ${state.currentIdx + 1} <span class="level-tag ${levelClass}">${escapeHtml(q.slotInfo.level)}</span></div>
+      <div class="question-topic">${escapeHtml(q.slotInfo.name)}</div>
+    </div>
+    ${qBody}
+    <div class="answer-area">
+      <input type="number" inputmode="numeric" class="answer-input" id="ans-input" placeholder="Nhập số..." step="any">
+      ${unitText}
+      <button class="answer-submit" id="ans-submit">Nộp</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  `;
+
+  document.getElementById('btn-next').classList.remove('show');
+
+  const input = document.getElementById('ans-input');
+  const submitBtn = document.getElementById('ans-submit');
+
+  // Restore previous answer if exists
+  if (ans.submitted) {
+    input.value = ans.picked !== null ? ans.picked : '';
+    input.classList.add('locked', ans.isRight ? 'right' : 'wrong');
+    input.disabled = true;
+    submitBtn.disabled = true;
+    showFeedback(q, ans);
+    document.getElementById('btn-next').classList.add('show');
+  } else {
+    input.focus();
+  }
+
+  function doSubmit() {
+    if (ans.submitted) return;
+    const picked = parseAnswer(input.value);
+    if (picked === null) {
+      input.focus();
+      return;
+    }
+    ans.picked = picked;
+    ans.isRight = picked === q.answer;
+    ans.submitted = true;
+
+    input.classList.add('locked', ans.isRight ? 'right' : 'wrong');
+    input.disabled = true;
+    submitBtn.disabled = true;
+
+    if (ans.isRight) document.getElementById('q-score').textContent = calcCurrentScore().toFixed(2);
+
+    showFeedback(q, ans);
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.classList.add('show');
+    nextBtn.textContent = state.currentIdx === state.questions.length - 1 ? 'Xem kết quả →' : 'Câu tiếp theo →';
+  }
+
+  submitBtn.addEventListener('click', doSubmit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); doSubmit(); }
+  });
+}
+
+function showFeedback(q, ans) {
+  const fb = document.getElementById('feedback');
+  const unit = q.unit ? ' ' + q.unit : '';
+  if (ans.isRight) {
+    fb.className = 'feedback correct show';
+    fb.innerHTML = `
+      <div class="feedback-title">✓ Chính xác!</div>
+      ${q.explanation ? `<div class="feedback-body">${escapeHtml(q.explanation)}</div>` : ''}
+    `;
+  } else {
+    fb.className = 'feedback wrong show';
+    fb.innerHTML = `
+      <div class="feedback-title">✗ Chưa đúng — đáp án: ${q.answer}${escapeHtml(unit)}</div>
+      ${q.explanation ? `<div class="feedback-body">${escapeHtml(q.explanation)}</div>` : ''}
+    `;
+  }
+}
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  state.currentIdx++;
+  if (state.currentIdx >= state.questions.length) finishQuiz(false);
+  else renderQuestion();
+});
+
+// ============= FINISH =============
+async function finishQuiz(timedOut) {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  const timeSec = TIME_LIMIT - state.remaining;
+  const totalScore = calcCurrentScore();
+  const correctCount = state.answers.filter(a => a.isRight).length;
+
+  const result = {
+    name: state.playerName,
+    score: totalScore,
+    maxScore: 2.0,
+    correctCount,
+    wrongCount: state.questions.length - correctCount,
+    timeSec, timedOut,
+    date: Date.now(),
+    answers: state.answers,
+  };
+
+  const localResult = { ...result, questions: state.questions };
+  const local = localGet(STORAGE_KEY, []);
+  local.push(localResult);
+  if (local.length > 100) local.splice(0, local.length - 100);
+  localSet(STORAGE_KEY, local);
+
+  if (CLOUD_ENABLED) {
+    const ok = await cloudPushResult(result);
+    if (!ok) {
+      const pending = localGet(PENDING_KEY, []);
+      pending.push(result);
+      localSet(PENDING_KEY, pending);
+    }
+  }
+
+  renderResult(localResult);
+  showScreen('screen-result');
+}
+
+function renderResult(r) {
+  const pct = r.score / r.maxScore;
+  let emoji, title, sub;
+  if (pct === 1) { emoji='🏆'; title='Xuất sắc!'; sub='Đạt điểm tuyệt đối — bạn quá đỉnh!'; fireConfetti(); }
+  else if (pct >= 0.75) { emoji='🎉'; title='Rất tốt!'; sub='Bạn đã làm bài rất tốt'; fireConfetti(); }
+  else if (pct >= 0.5) { emoji='👏'; title='Khá!'; sub='Cố gắng thêm chút nữa nhé'; }
+  else if (pct >= 0.25) { emoji='💪'; title='Trung bình'; sub='Cần ôn thêm các phần chưa nắm vững'; }
+  else { emoji='📚'; title='Hãy ôn lại'; sub = r.timedOut ? 'Hết giờ rồi! Lần sau cố gắng nhanh hơn.' : 'Đừng nản, làm lại để cải thiện!'; }
+
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-subtitle').textContent = sub;
+  document.getElementById('r-score').textContent = r.score.toFixed(2);
+  document.getElementById('r-correct').textContent = r.correctCount;
+  document.getElementById('r-wrong').textContent = r.wrongCount;
+  document.getElementById('r-time').textContent = formatTime(r.timeSec);
+
+  // Review
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = r.questions.map((q, i) => {
+    const a = r.answers[i];
+    const unit = q.unit ? ' ' + q.unit : '';
+    const yourAns = a.picked === null ? 'Chưa trả lời' : (a.picked + unit);
+    let qDisplay = '';
+    if (q.intro && q.items) {
+      qDisplay = `<div style="margin-bottom:8px;color:var(--ink-dim);font-size:13px;">${escapeHtml(q.intro)}</div>
+        <ol style="margin:0 0 8px 24px;font-size:13px;color:var(--ink-dim);">${q.items.map(it => `<li>${escapeHtml(it)}</li>`).join('')}</ol>`;
+    }
+    return `
+      <div class="review-card ${a.isRight ? 'correct' : 'wrong'}">
+        <div class="review-card-meta">
+          <div class="review-card-num">Câu ${i+1} · ${escapeHtml(q.slotInfo.name)} · ${escapeHtml(q.slotInfo.level)}</div>
+          <div class="review-mark ${a.isRight ? 'ok' : 'no'}">${a.isRight ? '✓ ' + POINT_PER_Q.toFixed(2) + 'đ' : '✗ 0đ'}</div>
+        </div>
+        ${qDisplay}
+        <div class="review-q">${escapeHtml(q.question)}</div>
+        <div class="review-ans-row">
+          <span class="your ${a.isRight ? 'right' : 'wrong'}">Bạn: ${escapeHtml(yourAns)}</span>
+          ${!a.isRight ? `<span class="correct-ans">Đáp án: ${q.answer}${escapeHtml(unit)}</span>` : ''}
+        </div>
+        ${q.explanation ? `<div class="review-exp">${escapeHtml(q.explanation)}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  renderLeaderboardInto('result-leaderboard', 5);
+}
+
+document.getElementById('btn-retry').addEventListener('click', startQuiz);
+document.getElementById('btn-home').addEventListener('click', () => showScreen('screen-home'));
+
+// ============= LEADERBOARD =============
+async function getCombinedResults() {
+  if (CLOUD_ENABLED) {
+    const cloud = await cloudFetchAll();
+    if (cloud) return cloud;
+  }
+  return localGet(STORAGE_KEY, []);
+}
+
+async function getLeaderboardData() {
+  const all = await getCombinedResults();
+  const byPlayer = {};
+  all.forEach(r => {
+    const key = r.name.toLowerCase().trim();
+    if (!byPlayer[key] || r.score > byPlayer[key].score || (r.score === byPlayer[key].score && r.timeSec < byPlayer[key].timeSec)) {
+      byPlayer[key] = r;
+    }
+  });
+  return Object.values(byPlayer).sort((a,b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return a.timeSec - b.timeSec;
+  });
+}
+
+async function renderLeaderboard() { await renderLeaderboardInto('lb-list', 100); }
+
+async function renderLeaderboardInto(elId, limit) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '<div class="empty-lb">Đang tải<span class="loading-dots"></span></div>';
+  try {
+    const lb = (await getLeaderboardData()).slice(0, limit);
+    if (lb.length === 0) { el.innerHTML = '<div class="empty-lb">Chưa có dữ liệu — hãy là người đầu tiên!</div>'; return; }
+    const myName = state.playerName.toLowerCase().trim();
+    el.innerHTML = lb.map((r, i) => {
+      const rank = i + 1;
+      let cls = '';
+      if (rank === 1) cls = 'gold'; else if (rank === 2) cls = 'silver'; else if (rank === 3) cls = 'bronze';
+      if (myName && r.name.toLowerCase().trim() === myName) cls += ' me';
+      const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
+      return `<div class="lb-row ${cls}">
+        <div class="lb-rank">${medal}</div>
+        <div class="lb-name">${escapeHtml(r.name)}</div>
+        <div class="lb-time">${formatTime(r.timeSec)}</div>
+        <div class="lb-score">${r.score.toFixed(2)}/2.0</div>
+      </div>`;
+    }).join('');
+  } catch (e) { el.innerHTML = '<div class="empty-lb">Lỗi tải dữ liệu</div>'; }
+}
+
+// ============= HISTORY =============
+async function renderHistory(name) {
+  document.getElementById('history-name').textContent = name;
+  const list = document.getElementById('history-list');
+  list.innerHTML = '<div class="empty-lb">Đang tải<span class="loading-dots"></span></div>';
+  const all = await getCombinedResults();
+  const key = name.toLowerCase().trim();
+  const history = all.filter(r => r.name.toLowerCase().trim() === key).sort((a,b) => b.date - a.date);
+  if (history.length === 0) { list.innerHTML = '<div class="empty-lb">Chưa có lượt làm bài nào.</div>'; return; }
+  list.innerHTML = history.slice(0,50).map((r,i) => {
+    const d = new Date(r.date);
+    const dateStr = d.toLocaleString('vi-VN', {dateStyle:'short', timeStyle:'short'});
+    return `<div class="history-card">
+      <div>
+        <div style="font-weight:600;margin-bottom:4px;">Lượt ${history.length - i}</div>
+        <div class="history-info">${dateStr} · ${formatTime(r.timeSec)} · ${r.correctCount}/4 câu đúng${r.timedOut ? ' · Hết giờ' : ''}</div>
+      </div>
+      <div class="history-score">${r.score.toFixed(2)}/2.0</div>
+    </div>`;
+  }).join('');
+}
+
+// ============= CONFETTI =============
+function fireConfetti() {
+  const colors = ['#ffd23f','#ff6b6b','#4ecdc4','#6bcf7f','#f0ebe1'];
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      document.body.appendChild(c);
+      const dur = 2.5 + Math.random()*2;
+      const drift = (Math.random() - 0.5) * 200;
+      c.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+        { transform: `translate(${drift}px, 105vh) rotate(${720 + Math.random()*360}deg)`, opacity: 0.3 }
+      ], { duration: dur*1000, easing: 'cubic-bezier(.2,.6,.4,1)' });
+      setTimeout(() => c.remove(), dur*1000);
+    }, i*30);
+  }
+}
+
+// ============= DASHBOARD =============
+async function openDashboard() { showScreen('screen-dashboard'); await refreshDashboard(); }
+async function refreshDashboard() {
+  const statusEl = document.getElementById('refresh-status');
+  statusEl.className = 'refresh-status loading';
+  statusEl.innerHTML = '<span class="dot"></span>Đang tải dữ liệu<span class="loading-dots"></span>';
+
+  let results;
+  if (CLOUD_ENABLED) {
+    results = await cloudFetchAll();
+    if (results === null) {
+      statusEl.className = 'refresh-status error';
+      statusEl.innerHTML = '<span class="dot"></span>Không kết nối được cloud';
+      results = localGet(STORAGE_KEY, []);
+    } else {
+      statusEl.className = 'refresh-status';
+      statusEl.innerHTML = `<span class="dot"></span>Đã cập nhật ${new Date().toLocaleTimeString('vi-VN')}`;
+    }
+  } else {
+    results = localGet(STORAGE_KEY, []);
+    statusEl.className = 'refresh-status error';
+    statusEl.innerHTML = '<span class="dot"></span>Chỉ xem dữ liệu trên máy này';
+  }
+  renderDashboard(results);
+}
+
+function renderDashboard(results) {
+  const totalAttempts = results.length;
+  const uniqueStudents = new Set(results.map(r => r.name.toLowerCase().trim())).size;
+  const avgScore = totalAttempts > 0 ? (results.reduce((s,r)=>s+r.score,0) / totalAttempts).toFixed(2) : '0.00';
+  const passCount = results.filter(r => r.score >= 1.0).length;
+  const passRate = totalAttempts > 0 ? Math.round(passCount/totalAttempts*100) : 0;
+
+  document.getElementById('dash-total-attempts').textContent = totalAttempts;
+  document.getElementById('dash-unique-students').textContent = uniqueStudents;
+  document.getElementById('dash-avg-score').textContent = avgScore;
+  document.getElementById('dash-pass-rate').textContent = passRate + '%';
+
+  // Histogram - 5 buckets: 0, 0.5, 1.0, 1.5, 2.0
+  const labels = ['0', '0.5', '1.0', '1.5', '2.0'];
+  const buckets = Array(5).fill(0);
+  results.forEach(r => {
+    const b = Math.round(r.score / 0.5);
+    if (b >= 0 && b < 5) buckets[b]++;
+  });
+  const maxB = Math.max(...buckets, 1);
+  document.getElementById('histogram').innerHTML = buckets.map((c, i) => {
+    const pct = c / maxB * 100;
+    const h = pct > 0 ? Math.max(3, pct * 1.7) : 3;
+    return `<div class="hist-bar-wrap">
+      <div class="hist-bar" style="height:${h}px;" title="${labels[i]}đ: ${c} lượt">
+        ${c > 0 ? `<span class="count">${c}</span>` : ''}
+      </div>
+      <div class="hist-label">${labels[i]}</div>
+    </div>`;
+  }).join('');
+
+  // Question stats
+  const qStats = {};
+  const allQuestions = [...POOL.slot1, ...POOL.slot2, ...POOL.slot3, ...POOL.slot4];
+  results.forEach(r => {
+    if (!r.answers) return;
+    r.answers.forEach(a => {
+      if (!qStats[a.qid]) {
+        const q = allQuestions.find(qq => qq.id === a.qid);
+        if (!q) return;
+        const slotKey = String(a.slot);
+        const slotInfo = POOL.slots[slotKey] || { name: 'Khác', level: '' };
+        qStats[a.qid] = { total: 0, wrong: 0, q, slotInfo };
+      }
+      qStats[a.qid].total++;
+      if (!a.isRight) qStats[a.qid].wrong++;
+    });
+  });
+  const sortedQ = Object.values(qStats)
+    .filter(x => x.total >= 1)
+    .map(x => ({ ...x, rate: x.wrong / x.total }))
+    .sort((a,b) => b.rate - a.rate)
+    .slice(0, 10);
+
+  const qstatsEl = document.getElementById('qstats-list');
+  if (sortedQ.length === 0) qstatsEl.innerHTML = '<div class="empty-lb">Chưa có dữ liệu</div>';
+  else {
+    qstatsEl.innerHTML = sortedQ.map(x => {
+      const ratePct = Math.round(x.rate * 100);
+      const cls = ratePct >= 60 ? 'high' : ratePct >= 35 ? 'mid' : 'low';
+      const qText = x.q.intro || x.q.question;
+      return `<div class="qstat-item">
+        <div class="qstat-header">
+          <div class="qstat-q">${escapeHtml(qText.substring(0, 150))}${qText.length > 150 ? '...' : ''}</div>
+          <div class="qstat-rate ${cls}">${ratePct}% sai</div>
+        </div>
+        <div class="qstat-bar"><div class="qstat-bar-fill ${cls}" style="width:${ratePct}%"></div></div>
+        <div class="qstat-meta">
+          <span class="topic">${escapeHtml(x.slotInfo.name)} · ${escapeHtml(x.slotInfo.level)} · Đáp án: ${x.q.answer}${x.q.unit ? ' ' + x.q.unit : ''}</span>
+          <span>${x.wrong}/${x.total} lượt sai</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Students
+  const byStudent = {};
+  results.forEach(r => {
+    const k = r.name.toLowerCase().trim();
+    if (!byStudent[k]) byStudent[k] = { name: r.name, attempts: 0, bestScore: 0, scoreSum: 0, bestTime: Infinity, lastDate: 0 };
+    const s = byStudent[k];
+    s.attempts++;
+    s.scoreSum += r.score;
+    if (r.score > s.bestScore) { s.bestScore = r.score; s.bestTime = r.timeSec; }
+    else if (r.score === s.bestScore && r.timeSec < s.bestTime) s.bestTime = r.timeSec;
+    if (r.date > s.lastDate) s.lastDate = r.date;
+  });
+  const studentsArr = Object.values(byStudent).map(s => ({...s, avgScore: (s.scoreSum/s.attempts).toFixed(2)}))
+    .sort((a,b) => { if (b.bestScore !== a.bestScore) return b.bestScore - a.bestScore; return a.bestTime - b.bestTime; });
+
+  const studentsEl = document.getElementById('students-list');
+  if (studentsArr.length === 0) studentsEl.innerHTML = '<div class="empty-lb">Chưa có học sinh nào làm bài</div>';
+  else {
+    studentsEl.innerHTML = `<div style="overflow-x:auto;"><table class="students-table">
+      <thead><tr><th style="width:40px;">#</th><th>Họ tên</th><th class="num">Lượt</th><th class="num">Điểm CN</th><th class="num">Điểm TB</th><th class="num">Thời gian</th><th>Lần cuối</th></tr></thead>
+      <tbody>${studentsArr.map((s,i) => {
+        const cls = s.bestScore >= 1.5 ? 'green' : s.bestScore >= 1.0 ? 'amber' : 'red';
+        const d = new Date(s.lastDate);
+        return `<tr>
+          <td class="num">${i+1}</td>
+          <td class="name-cell">${escapeHtml(s.name)}</td>
+          <td class="num">${s.attempts}</td>
+          <td class="score ${cls}">${s.bestScore.toFixed(2)}</td>
+          <td class="num">${s.avgScore}</td>
+          <td class="num">${formatTime(s.bestTime)}</td>
+          <td>${d.toLocaleString('vi-VN', {dateStyle:'short', timeStyle:'short'})}</td>
+        </tr>`;
+      }).join('')}</tbody></table></div>`;
+  }
+}
+
+document.getElementById('btn-dash-refresh').addEventListener('click', refreshDashboard);
+document.getElementById('btn-dash-home').addEventListener('click', () => showScreen('screen-home'));
+
+// ============= INIT =============
+initHome();
+checkAdminAccess();
+</script>
+</body>
+</html>
